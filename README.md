@@ -12,7 +12,13 @@
 git clone https://github.com/YoshikiMas/plt-docker.git
 ```
 
-2. Dockerイメージを作成
+2. フォルダに移動
+
+```
+cd plt-docker
+```
+
+3. Dockerイメージを作成
 
 * MakefileのIMAGE_TAGは適宜変更
 
@@ -20,7 +26,7 @@ git clone https://github.com/YoshikiMas/plt-docker.git
 make build
 ```
 
-3. Dockerを起動
+4. Dockerを起動
 
 * Makefileの23,24行目はコメントアウト（環境依存の記述）
 
@@ -32,13 +38,13 @@ make run
 
 〜Docker入った後〜
 
-4. Dockerfileで設定した環境に切り替え
+5. Dockerfileで設定した環境に切り替え
 
 ```
 conda activate pytorch-lightning
 ```
 
-5. 設定完了．プログラムを動かすことができる．
+6. 設定完了．プログラムを動かすことができる．
 
 
 
