@@ -3,7 +3,7 @@ GROUP_NAME = Domain
 HOST_PATH = '/home/$(USER_NAME)'
 CONTAINER_PATH = '/home/$(USER_NAME)'
 ROOT_PASSWORD = 'password'
-IMAGE_TAG = 'ymasuyama/pytorch-lightning'
+IMAGE_TAG = 'ymasuyama/pytorch-lightning' # 変更
 EXPOSED_PORT = 8888
 
 all: ## build & run docker.
