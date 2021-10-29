@@ -1,8 +1,12 @@
+# Dockerイメージを使用
 FROM nvidia/cuda:10.2-cudnn7-devel
 
+# 環境変数の設定
+# Dockerfile から派生する全てのコマンド環境で利用可能
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV CUDNN_VERSION 8.2.0.53
 
+# コマンドの実行
 RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo gosu ssh \
     build-essential cmake clang \
@@ -13,24 +17,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
+# 構築時に作業者が docker build コマンドで使う変数
 ARG ROOT_PASSWORD="password"
 RUN echo "root:$ROOT_PASSWORD" | chpasswd
 
+# 作業ディレクトリを設定
 WORKDIR /opt
+# minicondaのダウンロード
 RUN wget --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-py39_4.9.2-Linux-x86_64.sh
+# コマンドの実行
 RUN sh /opt/Miniconda3-py39_4.9.2-Linux-x86_64.sh -b -p /opt/miniconda3 && \
     rm -f Miniconda3-py39_4.9.2-Linux-x86_64.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
     
+# 環境の登録
 ENV PATH /opt/miniconda3/bin:$PATH
 
+# condaの実行
 RUN conda update -n base -c defaults conda
 RUN conda create -n pytorch-lightning python==3.7.7
 RUN conda init bash
 
+# CMDと同じ（？）
 SHELL ["conda", "run", "-n", "pytorch-lightning", "/bin/bash", "-c"]
 
+# インストール（conda）
 RUN conda install -y -c pytorch pytorch==1.9.1 torchvision=0.10.1 torchaudio=0.9.1 cudatoolkit=10.2
 RUN conda install -y -c conda-forge pytorch-lightning==1.4.9
 
@@ -60,6 +72,7 @@ RUN conda install -y -c conda-forge optuna=2.9.1
 RUN conda install -y -c pyg -c conda-forge pyg
 RUN conda clean --all
 
+# インストール（pip）
 RUN pip install --no-cache-dir pyroomacoustics
 RUN pip install --no-cache-dir cookiecutter
 RUN pip install --no-cache-dir museval
